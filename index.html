@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marmitas da Tiane · Controle de vendas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F6FA;--surface:#fff;--ink:#0F1B2D;--muted:#5A6678;--line:#DCE2EC;--green:#0B2545;--chili:#E8590C;--sun:#FF9F45;--r:18px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1424;--surface:#111E33;--ink:#EAF0F8;--muted:#9BABC2;--line:#22314A}}
+:root[data-theme="dark"]{--bg:#0A1424;--surface:#111E33;--ink:#EAF0F8;--muted:#9BABC2;--line:#22314A}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "DM Sans",system-ui,sans-serif}
+h1,h2,.brand,.big{font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 40px}
+.hero{background:var(--green);color:#fff;border-radius:0 0 28px 28px;padding:18px 20px 26px;overflow:hidden}
+.hero-in{max-width:720px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--sun);display:grid;place-items:center}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
+.hero h1{font-size:clamp(30px,8vw,46px);line-height:1.02;font-weight:800;margin:0 0 10px;letter-spacing:-.02em}
+.today{display:flex;gap:18px;align-items:baseline}
+.big{font-size:44px;font-weight:800;color:var(--sun);line-height:1}
+.today small{display:block;color:#c9d6ea;font-size:13px}
+.lunch{width:150px;flex:none}
+.steam path{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;opacity:0;animation:up 3.2s ease-in-out infinite}
+.steam path:nth-child(2){animation-delay:1s}.steam path:nth-child(3){animation-delay:2s}
+@keyframes up{0%{opacity:0;transform:translateY(8px)}30%{opacity:.75}100%{opacity:0;transform:translateY(-14px)}}
+@media (prefers-reduced-motion:reduce){.steam path{animation:none;opacity:.5}}
+.tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--line);padding:5px;border-radius:999px;margin:-20px 0 18px;position:relative}
+.tabs button{position:relative;z-index:1;transition:color .25s,transform .12s;flex:1;border:0;background:none;color:var(--muted);font:700 15px "DM Sans",sans-serif;padding:12px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected=true]{color:#fff}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px}
+h2{font-size:22px;margin:0 0 12px;font-weight:800}
+form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{font-size:13px;color:var(--muted);font-weight:500;display:block}
+input,select{width:100%;margin-top:4px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 17px "DM Sans",sans-serif}
+.full{grid-column:1/-1}
+.go{border:0;background:var(--green);color:#fff;font:700 17px "Bricolage Grotesque",sans-serif;padding:14px;border-radius:14px;cursor:pointer}
+.go:active{transform:scale(.98)}
+.row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);gap:10px}
+.row:first-of-type{border-top:0}
+.row b{font-weight:700}.row span{color:var(--muted);font-size:14px}
+.del{border:0;background:none;color:var(--chili);font-weight:700;cursor:pointer;padding:8px}
+.empty{color:var(--muted);padding:8px 0}
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button{flex:1;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px;border-radius:12px;font:700 14px "DM Sans",sans-serif;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--sun);border-color:var(--sun);color:#15211B}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.kpi{border-radius:var(--r);padding:16px;background:var(--green);color:#fff}
+.kpi:last-child{background:var(--chili)}
+.kpi .big{color:#fff;font-size:30px}
+.kpi small{opacity:.85}
+.chart{display:flex;align-items:flex-end;gap:4px;height:170px;padding-top:18px;overflow-x:auto}
+.col{flex:1;min-width:12px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:11px;color:var(--muted)}
+.bar{width:100%;background:var(--chili);border-radius:6px 6px 0 0;min-height:2px;transition:height .4s}
+.col em{font-style:normal;color:var(--ink);font-weight:700}
+.hi{margin:14px 0 2px;color:#c9d6ea;font-weight:500}
+.goal{margin-top:14px;max-width:260px}.goal small{color:#c9d6ea;font-size:13px}
+.gb{height:10px;background:#ffffff26;border-radius:99px;overflow:hidden;margin-bottom:4px}
+.gb i{display:block;height:100%;width:0;background:var(--sun);border-radius:99px;transition:width .7s}
+.kpi.avg{background:var(--sun);color:#15211B}.kpi.avg .big{color:#15211B}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--green);color:#fff;padding:12px 20px;border-radius:999px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chips button{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 12px;border-radius:99px;font:500 14px "DM Sans",sans-serif;cursor:pointer}
+.pay{border:1px solid var(--chili);color:var(--chili);background:none;border-radius:99px;padding:4px 10px;font:700 13px "DM Sans",sans-serif;cursor:pointer;margin-right:4px}
+.pay.ok{background:#2E9E5B;border-color:#2E9E5B;color:#fff}
+.kpi .big{font-size:26px}.today{flex-wrap:wrap}
+.mp{display:flex;gap:8px;margin-bottom:14px}.mp select{margin-top:0;font-weight:700}#sy{max-width:110px}
+.hero-in{position:relative}
+.menu{border:0;background:#ffffff1f;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;cursor:pointer}
+.drop{position:absolute;top:50px;left:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px;min-width:220px;z-index:5;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.drop button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--ink);font:500 16px "DM Sans",sans-serif;padding:12px 14px;border-radius:10px;cursor:pointer}
+.drop button[aria-current=true]{background:var(--sun);color:#15211B;font-weight:700}
+.ck{width:22px;height:22px;margin:0;padding:0;accent-color:var(--chili);flex:none}
+.logo3{display:block;flex:none}.logo3.hop{animation:hop .5s ease-out}
+@keyframes hop{0%{transform:none}40%{transform:translateY(-7px) rotate(-4deg)}100%{transform:none}}
+.tabs::before{content:"";position:absolute;top:5px;bottom:5px;left:5px;width:calc(50% - 5.5px);background:var(--chili);border-radius:999px;transition:transform .38s cubic-bezier(.3,1.4,.5,1),opacity .2s}
+.tabs[data-i="2"]::before{transform:translateX(calc(100% + 6px))}.tabs[data-i="3"]::before{opacity:0}
+.pg{animation:pgin .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes pgin{from{opacity:0;transform:translateX(var(--dx,26px))}to{opacity:1;transform:none}}
+button{transition:transform .12s,background .2s,color .2s}button:active{transform:scale(.94)}
+.drop{animation:pop .18s ease-out;transform-origin:top left}
+@keyframes pop{from{opacity:0;transform:scale(.92)}}
+@media (prefers-reduced-motion:reduce){.pg,.hop,.drop{animation:none!important}.tabs::before{transition:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-in">
+  <div class="brand"><button class="menu" id="mb" aria-label="Menu" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg></button><svg class="logo3" viewBox="0 0 64 44" width="60" height="42" aria-hidden="true"><g transform="rotate(-11 19 34)"><rect x="4" y="12" width="30" height="24" rx="5" fill="#fff" stroke="#cfd6cf"/><path d="M4 20h30" stroke="#dfe4df"/><rect x="16" y="17" width="6" height="4" rx="1.5" fill="#cfd6cf"/></g><g transform="rotate(11 45 34)"><rect x="30" y="12" width="30" height="24" rx="5" fill="#fff" stroke="#cfd6cf"/><path d="M30 20h30" stroke="#dfe4df"/><rect x="42" y="17" width="6" height="4" rx="1.5" fill="#cfd6cf"/></g><g><rect x="17" y="8" width="30" height="27" rx="5" fill="#fff" stroke="#cfd6cf"/><path d="M17 17h30" stroke="#dfe4df"/><rect x="29" y="12" width="6" height="4" rx="1.5" fill="#cfd6cf"/><circle cx="25" cy="26" r="1.2" fill="#e3e8e3"/><circle cx="34" cy="29" r="1.2" fill="#e3e8e3"/><circle cx="41" cy="24" r="1.2" fill="#e3e8e3"/></g></svg>Marmitas da Tiane</div>
+  <nav class="drop" id="dp" hidden><button data-n="1">Lançar marmitas</button><button data-n="2">Totais</button><button data-n="3">Clientes e resumo</button></nav>
+  <div class="hero-row">
+    <div>
+      <p class="hi" id="hi"></p><h1>Cada marmita conta.</h1>
+      <div class="today"><div><span class="big" id="hq">0</span><small>marmitas hoje</small></div><div><span class="big" id="hv">R$ 0</span><small>faturado na semana</small></div></div><div class="goal"><div class="gb"><i id="gi"></i></div><small id="gt"></small></div>
+    </div>
+    <svg class="lunch" viewBox="0 0 160 150" aria-hidden="true">
+      <g class="steam"><path d="M55 40c-8-8 8-14 0-24"/><path d="M80 40c-8-8 8-14 0-24"/><path d="M105 40c-8-8 8-14 0-24"/></g>
+      <rect x="15" y="52" width="130" height="86" rx="18" fill="#FFC233"/>
+      <rect x="24" y="61" width="60" height="68" rx="10" fill="#FFF6E0"/>
+      <rect x="90" y="61" width="46" height="32" rx="10" fill="#6B3A1E"/>
+      <rect x="90" y="97" width="22" height="32" rx="10" fill="#E4431F"/>
+      <rect x="114" y="97" width="22" height="32" rx="10" fill="#4FA34F"/>
+      <circle cx="40" cy="80" r="3" fill="#E9D9B0"/><circle cx="58" cy="95" r="3" fill="#E9D9B0"/><circle cx="46" cy="110" r="3" fill="#E9D9B0"/><circle cx="70" cy="76" r="3" fill="#E9D9B0"/>
+    </svg>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <div class="tabs" role="tablist" data-i="1">
+    <button role="tab" id="t1" aria-selected="true">Lançar marmitas</button>
+    <button role="tab" id="t2" aria-selected="false">Totais</button>
+  </div>
+
+  <section id="p1">
+    <div class="card">
+      <h2>Novo lançamento</h2>
+      <form id="f"><div class="full"><label>Cliente<input id="c" list="cl" placeholder="Ex.: Empresa A" autocomplete="off" required></label><datalist id="cl"></datalist><div class="chips" id="chips"></div></div>
+        <label>Quantidade<input id="q" type="number" min="1" step="1" inputmode="numeric" placeholder="50" required></label>
+        <label>Valor de cada (R$)<input id="v" type="number" min="0.01" step="0.01" inputmode="decimal" required></label>
+        <label class="full">Data<input id="d" type="date" required></label>
+        <button class="go full" type="submit">Lançar marmitas</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Lançado nesta semana</h2>
+      <div id="list"></div>
+    </div>
+  </section>
+
+  <div id="ctl" hidden>
+    <div class="seg" id="seg">
+      <button data-p="w" aria-pressed="true">Semana</button>
+      <button data-p="m" aria-pressed="false">Mês</button>
+      <button data-p="a" aria-pressed="false">Tudo</button>
+    </div>
+
+    <div class="mp" id="mp" hidden><select id="sm" aria-label="Mês"></select><select id="sy" aria-label="Ano"></select></div>
+</div>
+  <section id="p2" hidden>
+    <div class="kpis">
+      <div class="kpi"><span class="big" id="kq">0</span><br><small>marmitas vendidas</small></div>
+      <div class="kpi"><span class="big" id="kv">R$ 0</span><br><small>faturamento</small></div>
+    <div class="kpi avg"><span class="big" id="ka">0</span><br><small>média por dia com vendas</small></div>
+      <div class="kpi"><span class="big" id="kr">R$ 0</span><br><small>a receber</small></div>
+    </div>
+    <div class="card"><h2 id="ct">Por dia</h2><div class="chart" id="chart"></div></div>
+  </section>
+<section id="p3" hidden>
+    <div class="card"><h2>Por cliente</h2><p class="empty" style="margin:0 0 6px">Marque os clientes que entram no resumo.</p><div class="chips" style="margin:0 0 6px"><button type="button" id="sa">Marcar todos</button><button type="button" id="sn">Desmarcar todos</button></div><div id="byc"></div><button class="go" id="cp" style="width:100%;margin-top:12px">Copiar resumo para o WhatsApp</button>
+    <button class="go" id="csv" style="width:100%;margin-top:10px;background:var(--chili)">Baixar planilha (CSV)</button></div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
+const brl=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parse=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+let S={e:[],p:''},per='w',SM=new Date().getMonth()+1,SY=new Date().getFullYear(),EX=new Set();
+try{const r=localStorage.getItem('sdc-marmitas');if(r)S=JSON.parse(r)}catch(e){}
+const save=()=>{try{localStorage.setItem('sdc-marmitas',JSON.stringify(S))}catch(e){}};
+function wk(){const t=new Date(),k=(t.getDay()+6)%7,s=new Date(t.getFullYear(),t.getMonth(),t.getDate()-k);return[iso(s),iso(new Date(s.getFullYear(),s.getMonth(),s.getDate()+6))]}
+const tot=a=>({q:a.reduce((x,e)=>x+e.q,0),v:a.reduce((x,e)=>x+e.q*(e.v||0),0)});
+function render(){
+  const td=iso(new Date()),[ws,we]=wk();
+  const h=tot(S.e.filter(e=>e.d===td));$('#hq').textContent=h.q;$('#hv').textContent=brl0(tot(S.e.filter(e=>e.d>=ws&&e.d<=we)).v);
+  const hr=new Date().getHours(),META=50;$('#hi').textContent=hr<12?'Bom dia!':hr<18?'Boa tarde!':'Boa noite!';
+  $('#gi').style.width=Math.min(100,h.q/META*100)+'%';$('#gt').textContent=h.q>=META?'Meta do dia batida! 🎉':'Faltam '+(META-h.q)+' para a meta de '+META;
+  const wl=S.e.filter(e=>e.d>=ws&&e.d<=we).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
+  $('#list').innerHTML=wl.length?wl.map(e=>`<div class="row"><div><b>${e.q} marmitas · ${esc(e.c||'Sem cliente')}</b><br><span>${e.d.split('-').reverse().slice(0,2).join('/')} · ${brl(e.v||0)} cada</span></div><div style="text-align:right"><b>${brl(e.q*(e.v||0))}</b><br><button class="pay ${e.p?'ok':''}" data-id="${e.id}">${e.p?'Pago ✓':'A receber'}</button><button class="del" data-id="${e.id}" aria-label="Apagar lançamento">Apagar</button></div></div>`).join(''):'<p class="empty">Nada lançado esta semana. Preencha acima e toque em Lançar marmitas.</p>';
+  const ym=SY+'-'+pad(SM);
+  let set,keys,labels;
+  if(per==='w'){set=wl;const s=parse(ws);keys=[...Array(7)].map((_,i)=>iso(new Date(s.getFullYear(),s.getMonth(),s.getDate()+i)));labels=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']}
+  else if(per==='m'){set=S.e.filter(e=>e.d.startsWith(ym));const n=new Date(SY,SM,0).getDate();keys=[...Array(n)].map((_,i)=>ym+'-'+pad(i+1));labels=keys.map((_,i)=>(i+1)%5===1||i+1===n?i+1:'')}
+  else{set=S.e;keys=[...new Set(S.e.map(e=>e.d.slice(0,7)))].sort();labels=keys.map(k=>k.slice(5)+'/'+k.slice(2,4))}
+  const g=k=>set.filter(e=>(per==='a'?e.d.slice(0,7):e.d)===k).reduce((x,e)=>x+e.q,0);
+  const vals=keys.map(g),mx=Math.max(...vals,1),T=tot(set);
+  $('#kq').textContent=T.q;$('#kv').textContent=brl0(T.v);$('#kr').textContent=brl0(set.filter(e=>!e.p).reduce((x,e)=>x+e.q*(e.v||0),0));$('#mp').hidden=per!=='m';
+  $('#sm').innerHTML=MN.map((m,i)=>`<option value="${i+1}"${i+1===SM?' selected':''}>${m}</option>`).join('');
+  const ys=[...new Set([...S.e.map(e=>+e.d.slice(0,4)),SY,new Date().getFullYear()])].sort((a,b)=>b-a);
+  $('#sy').innerHTML=ys.map(y=>`<option${y===SY?' selected':''}>${y}</option>`).join('');
+  const nd=new Set(set.map(e=>e.d)).size;$('#ka').textContent=nd?Math.round(T.q/nd):0;
+  const bc={};set.forEach(e=>{const k=e.c||'Sem cliente';bc[k]=bc[k]||{q:0,v:0,r:0};bc[k].q+=e.q;bc[k].v+=e.q*(e.v||0);if(e.p)bc[k].r+=e.q*(e.v||0)});
+  const rk=Object.entries(bc).sort((a,b)=>b[1].q-a[1].q);window._rk=rk;window._set=set;$('#cp').textContent='Copiar resumo ('+rk.filter(([k])=>!EX.has(k)).length+' de '+rk.length+' clientes)';
+  $('#byc').innerHTML=rk.length?rk.map(([k,x])=>`<div class="row"><div style="display:flex;gap:12px;align-items:center"><input type="checkbox" class="ck" data-k="${esc(k)}" aria-label="Incluir ${esc(k)} no resumo" ${EX.has(k)?'':'checked'}><div><b>${esc(k)}</b><br><span>${x.q} marmitas · recebido ${brl(x.r)}</span></div></div><b>${brl(x.v)}</b></div>`).join(''):'<p class="empty">Sem lançamentos neste período.</p>';
+  const cm=new Map(S.e.filter(e=>e.c).sort((a,b)=>a.id-b.id).map(e=>[e.c,e.v]));window._cs=Object.fromEntries(cm);const cs=[...cm.entries()];
+  $('#cl').innerHTML=cs.map(([c])=>`<option value="${esc(c)}">`).join('');
+  $('#chips').innerHTML=cs.slice(-6).reverse().map(([c,v])=>`<button type="button" data-c="${esc(c)}" data-v="${v||''}">${esc(c)}</button>`).join('');
+  $('#ct').textContent=per==='w'?'Marmitas por dia da semana':per==='m'?'Marmitas por dia em '+MN[SM-1]:'Marmitas por mês';
+  $('#chart').innerHTML=vals.length?vals.map((v,i)=>`<div class="col">${per==='w'||per==='a'?`<em>${v||''}</em>`:''}<div class="bar" style="height:${v/mx*100*.78}%"></div><span>${labels[i]}</span></div>`).join(''):'<p class="empty">Sem dados ainda.</p>';
+}
+let cur=1;function tab(n){const dir=n>=cur?26:-26;cur=n;[1,2,3].forEach(i=>{$('#p'+i).hidden=i!==n;if(i<3)$('#t'+i).setAttribute('aria-selected',i===n)});$('#ctl').hidden=n<2;$('#dp').hidden=true;$('#mb').setAttribute('aria-expanded','false');
+  document.querySelectorAll('#dp button').forEach(b=>b.setAttribute('aria-current',+b.dataset.n===n));window.scrollTo(0,0);
+  const pe=$('#p'+n);pe.style.setProperty('--dx',dir+'px');pe.classList.remove('pg');void pe.offsetWidth;pe.classList.add('pg');
+  $('.tabs').dataset.i=n;const lg=$('.logo3');lg.classList.remove('hop');void lg.offsetWidth;lg.classList.add('hop');render()}
+$('#mb').onclick=()=>{const h=$('#dp').hidden;$('#dp').hidden=!h;$('#mb').setAttribute('aria-expanded',h)};
+$('#dp').onclick=e=>{const b=e.target.closest('button');if(b)tab(+b.dataset.n)};
+document.addEventListener('click',e=>{if(!e.target.closest('#dp,#mb'))$('#dp').hidden=true});
+$('#t1').onclick=()=>tab(1);$('#t2').onclick=()=>tab(2);
+$('#seg').onclick=e=>{const b=e.target.closest('button');if(!b)return;per=b.dataset.p;document.querySelectorAll('#seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()};
+$('#f').onsubmit=e=>{e.preventDefault();const q=parseInt($('#q').value),v=parseFloat($('#v').value),c=$('#c').value.trim(),d=$('#d').value;
+  if(!(q>0)||!(v>0)||!c||!d)return;S.e.push({id:Date.now(),d,q,c,v,p:false});save();$('#q').value='';render();const t=$('#toast');t.textContent='+'+q+' marmitas lançadas ✓';t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)};
+$('#list').onclick=e=>{const pb=e.target.closest('.pay');if(pb){const x=S.e.find(z=>z.id==pb.dataset.id);if(x){x.p=!x.p;save();render()}return}const b=e.target.closest('.del');if(!b)return;S.e=S.e.filter(x=>x.id!=b.dataset.id);save();render()};
+const MN=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+$('#sm').onchange=e=>{SM=+e.target.value;render()};$('#sy').onchange=e=>{SY=+e.target.value;render()};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const brl0=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)};
+$('#chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#c').value=b.dataset.c;$('#v').value=b.dataset.v;$('#q').focus()};
+$('#c').onchange=()=>{const v=(window._cs||{})[$('#c').value.trim()];if(v)$('#v').value=v};
+$('#byc').onchange=e=>{const c=e.target.closest('.ck');if(!c)return;c.checked?EX.delete(c.dataset.k):EX.add(c.dataset.k);render()};
+$('#sa').onclick=()=>{EX.clear();render()};$('#sn').onclick=()=>{EX=new Set((window._rk||[]).map(([k])=>k));render()};
+$('#cp').onclick=async()=>{const L=(window._set||[]).filter(e=>!EX.has(e.c||'Sem cliente')).sort((a,b)=>a.d.localeCompare(b.d)||a.id-b.id);
+  if(!L.length){toast('Selecione ao menos um cliente');return}
+  const n=per==='w'?'da semana':per==='m'?'de '+MN[SM-1]+'/'+SY:'geral';let t='*Marmitas da Tiane - resumo '+n+'*\n';
+  const by={};L.forEach(e=>{const k=e.c||'Sem cliente';(by[k]=by[k]||[]).push(e)});let TQ=0,TV=0;
+  Object.entries(by).forEach(([k,a])=>{t+='\n*'+k+'*\n';let q=0,v=0;a.forEach(e=>{t+=e.d.split('-').reverse().join('/')+' - '+e.q+' marmitas x '+brl(e.v||0)+' = '+brl(e.q*(e.v||0))+'\n';q+=e.q;v+=e.q*(e.v||0)});if(a.length>1)t+='Subtotal: '+q+' marmitas - '+brl(v)+'\n';TQ+=q;TV+=v});
+  t+='\nTotal: '+TQ+' marmitas - '+brl(TV);
+  try{await navigator.clipboard.writeText(t);toast('Resumo copiado ✓')}catch(e){toast('Não consegui copiar aqui')}};
+$('#csv').onclick=()=>{const L=(window._set||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)||a.id-b.id);
+  if(!L.length){toast('Nada para baixar neste período');return}
+  const f=n=>String(n).replace('.',','),q=x=>'"'+String(x).replace(/"/g,'""')+'"';
+  let c='Data;Cliente;Quantidade;Valor de cada;Total;Situação\r\n';
+  L.forEach(e=>{const v=e.v||0;c+=[e.d.split('-').reverse().join('/'),q(e.c||'Sem cliente'),e.q,f(v.toFixed(2)),f((e.q*v).toFixed(2)),e.p?'Pago':'A receber'].join(';')+'\r\n'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv;charset=utf-8'}));
+  a.download='marmitas-'+(per==='m'?SY+'-'+pad(SM):per==='w'?'semana':'tudo')+'.csv';document.body.appendChild(a);a.click();a.remove();toast('Planilha baixada ✓')};
+$('#d').value=iso(new Date());
+render();
+</script>
+</body>
+</html>
