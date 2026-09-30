@@ -15,16 +15,16 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "DM Sans",system-ui,sans-serif}
 h1,h2,.brand,.big{font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif}
 .wrap{max-width:720px;margin:0 auto;padding:0 16px 40px}
-.hero{background:var(--green);color:#fff;border-radius:0 0 28px 28px;padding:18px 20px 26px;overflow:hidden}
+.hero{background:var(--green);color:#fff;border-radius:0 0 28px 28px;padding:12px 20px 30px;overflow:hidden}
 .hero-in{max-width:720px;margin:0 auto}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
 .logo{width:34px;height:34px;border-radius:10px;background:var(--sun);display:grid;place-items:center}
-.hero-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
-.hero h1{font-size:clamp(30px,8vw,46px);line-height:1.02;font-weight:800;margin:0 0 10px;letter-spacing:-.02em}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px}
+.hero h1{font-size:22px;line-height:1.1;font-weight:800;margin:0 0 8px;letter-spacing:-.02em}
 .today{display:flex;gap:18px;align-items:baseline}
-.big{font-size:44px;font-weight:800;color:var(--sun);line-height:1}
+.big{font-size:32px;font-weight:800;color:var(--sun);line-height:1}
 .today small{display:block;color:#c9d6ea;font-size:13px}
-.lunch{width:150px;flex:none}
+.lunch{width:124px;flex:none}
 .steam path{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;opacity:0;animation:up 3.2s ease-in-out infinite}
 .steam path:nth-child(2){animation-delay:1s}.steam path:nth-child(3){animation-delay:2s}
 @keyframes up{0%{opacity:0;transform:translateY(8px)}30%{opacity:.75}100%{opacity:0;transform:translateY(-14px)}}
@@ -58,8 +58,8 @@ input,select{width:100%;margin-top:4px;padding:12px;border-radius:12px;border:1p
 .col{flex:1;min-width:12px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:11px;color:var(--muted)}
 .bar{width:100%;background:var(--chili);border-radius:6px 6px 0 0;min-height:2px;transition:height .4s}
 .col em{font-style:normal;color:var(--ink);font-weight:700}
-.hi{margin:14px 0 2px;color:#c9d6ea;font-weight:500}
-.goal{margin-top:14px;max-width:260px}.goal small{color:#c9d6ea;font-size:13px}
+.hi{margin:8px 0 0;color:#c9d6ea;font-weight:500}
+.goal{margin-top:10px;max-width:260px}.goal small{color:#c9d6ea;font-size:13px}
 .gb{height:10px;background:#ffffff26;border-radius:99px;overflow:hidden;margin-bottom:4px}
 .gb i{display:block;height:100%;width:0;background:var(--sun);border-radius:99px;transition:width .7s}
 .kpi.avg{background:var(--sun);color:#15211B}.kpi.avg .big{color:#15211B}
@@ -89,6 +89,7 @@ button{transition:transform .12s,background .2s,color .2s}button:active{transfor
 @media (prefers-reduced-motion:reduce){.pg,.hop,.drop{animation:none!important}.tabs::before{transition:none}}
 [hidden]{display:none!important}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 </head>
 <body>
 <header class="hero"><div class="hero-in">
@@ -99,15 +100,7 @@ button{transition:transform .12s,background .2s,color .2s}button:active{transfor
       <p class="hi" id="hi"></p><h1>Cada marmita conta.</h1>
       <div class="today"><div><span class="big" id="hq">0</span><small>marmitas hoje</small></div><div><span class="big" id="hv">R$ 0</span><small>faturado na semana</small></div></div><div class="goal"><div class="gb"><i id="gi"></i></div><small id="gt"></small></div>
     </div>
-    <svg class="lunch" viewBox="0 0 160 150" aria-hidden="true">
-      <g class="steam"><path d="M55 40c-8-8 8-14 0-24"/><path d="M80 40c-8-8 8-14 0-24"/><path d="M105 40c-8-8 8-14 0-24"/></g>
-      <rect x="15" y="52" width="130" height="86" rx="18" fill="#FFC233"/>
-      <rect x="24" y="61" width="60" height="68" rx="10" fill="#FFF6E0"/>
-      <rect x="90" y="61" width="46" height="32" rx="10" fill="#6B3A1E"/>
-      <rect x="90" y="97" width="22" height="32" rx="10" fill="#E4431F"/>
-      <rect x="114" y="97" width="22" height="32" rx="10" fill="#4FA34F"/>
-      <circle cx="40" cy="80" r="3" fill="#E9D9B0"/><circle cx="58" cy="95" r="3" fill="#E9D9B0"/><circle cx="46" cy="110" r="3" fill="#E9D9B0"/><circle cx="70" cy="76" r="3" fill="#E9D9B0"/>
-    </svg>
+    <svg class="lunch" viewBox="0 0 160 130" aria-hidden="true"><g class="steam"><path d="M68 40c-8-8 8-14 0-24"/><path d="M84 40c-8-8 8-14 0-24"/><path d="M100 40c-8-8 8-14 0-24"/></g><g transform="rotate(-10 35 100)"><rect x="4" y="62" width="62" height="50" rx="10" fill="#fff" stroke="#c9d3e3" stroke-width="2"/><path d="M4 79h62" stroke="#dde4f0" stroke-width="2"/><rect x="27" y="71" width="16" height="7" rx="3" fill="#c9d3e3"/></g><g transform="rotate(10 125 100)"><rect x="94" y="62" width="62" height="50" rx="10" fill="#fff" stroke="#c9d3e3" stroke-width="2"/><path d="M94 79h62" stroke="#dde4f0" stroke-width="2"/><rect x="117" y="71" width="16" height="7" rx="3" fill="#c9d3e3"/></g><g><rect x="49" y="46" width="62" height="64" rx="10" fill="#fff" stroke="#c9d3e3" stroke-width="2"/><path d="M49 65h62" stroke="#dde4f0" stroke-width="2"/><rect x="72" y="54" width="16" height="7" rx="3" fill="#c9d3e3"/><circle cx="62" cy="84" r="2" fill="#e3e8ef"/><circle cx="82" cy="92" r="2" fill="#e3e8ef"/><circle cx="98" cy="80" r="2" fill="#e3e8ef"/><circle cx="72" cy="100" r="2" fill="#e3e8ef"/></g></svg>
   </div>
 </div></header>
 
@@ -153,7 +146,7 @@ button{transition:transform .12s,background .2s,color .2s}button:active{transfor
   </section>
 <section id="p3" hidden>
     <div class="card"><h2>Por cliente</h2><p class="empty" style="margin:0 0 6px">Marque os clientes que entram no resumo.</p><div class="chips" style="margin:0 0 6px"><button type="button" id="sa">Marcar todos</button><button type="button" id="sn">Desmarcar todos</button></div><div id="byc"></div><button class="go" id="cp" style="width:100%;margin-top:12px">Copiar resumo para o WhatsApp</button>
-    <button class="go" id="csv" style="width:100%;margin-top:10px;background:var(--chili)">Baixar planilha (CSV)</button></div>
+    <button class="go" id="csv" style="width:100%;margin-top:10px;background:var(--chili)">Baixar planilha (Excel)</button></div>
   </section>
 </main>
 <div class="toast" id="toast" role="status"></div>
@@ -189,7 +182,7 @@ function render(){
   const nd=new Set(set.map(e=>e.d)).size;$('#ka').textContent=nd?Math.round(T.q/nd):0;
   const bc={};set.forEach(e=>{const k=e.c||'Sem cliente';bc[k]=bc[k]||{q:0,v:0,r:0};bc[k].q+=e.q;bc[k].v+=e.q*(e.v||0);if(e.p)bc[k].r+=e.q*(e.v||0)});
   const rk=Object.entries(bc).sort((a,b)=>b[1].q-a[1].q);window._rk=rk;window._set=set;$('#cp').textContent='Copiar resumo ('+rk.filter(([k])=>!EX.has(k)).length+' de '+rk.length+' clientes)';
-  $('#byc').innerHTML=rk.length?rk.map(([k,x])=>`<div class="row"><div style="display:flex;gap:12px;align-items:center"><input type="checkbox" class="ck" data-k="${esc(k)}" aria-label="Incluir ${esc(k)} no resumo" ${EX.has(k)?'':'checked'}><div><b>${esc(k)}</b><br><span>${x.q} marmitas · recebido ${brl(x.r)}</span></div></div><b>${brl(x.v)}</b></div>`).join(''):'<p class="empty">Sem lançamentos neste período.</p>';
+  $('#byc').innerHTML=rk.length?rk.map(([k,x])=>`<div class="row"><div style="display:flex;gap:12px;align-items:center"><input type="checkbox" class="ck" data-k="${esc(k)}" aria-label="Incluir ${esc(k)} no resumo" ${EX.has(k)?'':'checked'}><div><b>${esc(k)}</b><br><span>${x.q} marmitas</span><br><span style="color:#2E9E5B;font-weight:500">recebido ${brl(x.r)}</span></div></div><b style="white-space:nowrap">${brl(x.v)}</b></div>`).join(''):'<p class="empty">Sem lançamentos neste período.</p>';
   const cm=new Map(S.e.filter(e=>e.c).sort((a,b)=>a.id-b.id).map(e=>[e.c,e.v]));window._cs=Object.fromEntries(cm);const cs=[...cm.entries()];
   $('#cl').innerHTML=cs.map(([c])=>`<option value="${esc(c)}">`).join('');
   $('#chips').innerHTML=cs.slice(-6).reverse().map(([c,v])=>`<button type="button" data-c="${esc(c)}" data-v="${v||''}">${esc(c)}</button>`).join('');
@@ -224,13 +217,43 @@ $('#cp').onclick=async()=>{const L=(window._set||[]).filter(e=>!EX.has(e.c||'Sem
   Object.entries(by).forEach(([k,a])=>{t+='\n*'+k+'*\n';let q=0,v=0;a.forEach(e=>{t+=e.d.split('-').reverse().join('/')+' - '+e.q+' marmitas x '+brl(e.v||0)+' = '+brl(e.q*(e.v||0))+'\n';q+=e.q;v+=e.q*(e.v||0)});if(a.length>1)t+='Subtotal: '+q+' marmitas - '+brl(v)+'\n';TQ+=q;TV+=v});
   t+='\nTotal: '+TQ+' marmitas - '+brl(TV);
   try{await navigator.clipboard.writeText(t);toast('Resumo copiado ✓')}catch(e){toast('Não consegui copiar aqui')}};
-$('#csv').onclick=()=>{const L=(window._set||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)||a.id-b.id);
+const csvDl=()=>{const L=(window._set||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)||a.id-b.id);
   if(!L.length){toast('Nada para baixar neste período');return}
   const f=n=>String(n).replace('.',','),q=x=>'"'+String(x).replace(/"/g,'""')+'"';
   let c='Data;Cliente;Quantidade;Valor de cada;Total;Situação\r\n';
   L.forEach(e=>{const v=e.v||0;c+=[e.d.split('-').reverse().join('/'),q(e.c||'Sem cliente'),e.q,f(v.toFixed(2)),f((e.q*v).toFixed(2)),e.p?'Pago':'A receber'].join(';')+'\r\n'});
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv;charset=utf-8'}));
   a.download='marmitas-'+(per==='m'?SY+'-'+pad(SM):per==='w'?'semana':'tudo')+'.csv';document.body.appendChild(a);a.click();a.remove();toast('Planilha baixada ✓')};
+$('#csv').onclick=async()=>{
+  const L=(window._set||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)||a.id-b.id);
+  if(!L.length){toast('Nada para baixar neste período');return}
+  if(!window.ExcelJS){csvDl();return}
+  try{
+    const money='"R$" #,##0.00',ln={style:'thin',color:{argb:'FFD5DCE8'}},bd={top:ln,bottom:ln,left:ln,right:ln};
+    const hd=r=>{r.height=26;r.eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'},size:12};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0B2545'}};c.alignment={vertical:'middle',horizontal:'center'}})};
+    const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Lançamentos',{views:[{state:'frozen',ySplit:1}]});
+    ws.columns=[{header:'Data',width:14},{header:'Cliente',width:28},{header:'Quantidade',width:14},{header:'Valor de cada',width:17},{header:'Total',width:17},{header:'Situação',width:14}];
+    let TQ=0,TV=0;const n=L.length;
+    L.forEach((e,i)=>{const r=i+2,v=e.v||0,[y,m,d]=e.d.split('-').map(Number);TQ+=e.q;TV+=e.q*v;
+      ws.addRow([new Date(Date.UTC(y,m-1,d)),e.c||'Sem cliente',e.q,v,{formula:'C'+r+'*D'+r,result:e.q*v},e.p?'Pago':'A receber']);});
+    hd(ws.getRow(1));
+    ws.eachRow((r,i)=>{if(i<2)return;r.height=22;r.eachCell((c,col)=>{c.border=bd;c.alignment={vertical:'middle',horizontal:col===2?'left':col===4||col===5?'right':'center'};
+      if(col===1)c.numFmt='dd/mm/yyyy';if(col===4||col===5)c.numFmt=money;
+      if(col===6){const pg=c.value==='Pago';c.font={bold:true,color:{argb:pg?'FF1B6E3F':'FFB4440A'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:pg?'FFD9F2E3':'FFFFE6D6'}}}})});
+    const tr=ws.addRow(['Total','',{formula:'SUM(C2:C'+(n+1)+')',result:TQ},'',{formula:'SUM(E2:E'+(n+1)+')',result:TV},'']);tr.height=24;
+    tr.eachCell({includeEmpty:true},(c,col)=>{c.font={bold:true};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8EEF8'}};c.border={top:{style:'medium',color:{argb:'FF0B2545'}}};c.alignment={vertical:'middle',horizontal:col===5?'right':'center'};if(col===5)c.numFmt=money});
+    ws.autoFilter='A1:F1';
+    const w2=wb.addWorksheet('Por cliente');
+    w2.columns=[{header:'Cliente',width:28},{header:'Marmitas',width:14},{header:'Total',width:17},{header:'Recebido',width:17},{header:'A receber',width:17}];
+    const bc={};L.forEach(e=>{const k=e.c||'Sem cliente',t=e.q*(e.v||0);bc[k]=bc[k]||{q:0,t:0,r:0};bc[k].q+=e.q;bc[k].t+=t;if(e.p)bc[k].r+=t});
+    Object.entries(bc).sort((a,b)=>b[1].t-a[1].t).forEach(([k,x])=>w2.addRow([k,x.q,x.t,x.r,x.t-x.r]));
+    hd(w2.getRow(1));
+    w2.eachRow((r,i)=>{if(i<2)return;r.height=22;r.eachCell((c,col)=>{c.border=bd;c.alignment={vertical:'middle',horizontal:col===1?'left':col===2?'center':'right'};if(col>2)c.numFmt=money})});
+    const buf=await wb.xlsx.writeBuffer();
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+    a.download='marmitas-'+(per==='m'?SY+'-'+pad(SM):per==='w'?'semana':'tudo')+'.xlsx';document.body.appendChild(a);a.click();a.remove();toast('Planilha baixada ✓');
+  }catch(err){csvDl()}
+};
 $('#d').value=iso(new Date());
 render();
 </script>
