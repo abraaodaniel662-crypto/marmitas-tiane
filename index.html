@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marmitas da Tiane · Controle de vendas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+</head>
+<body>
+<header class="hero"><div class="hero-in">
+  <div class="brand"><button class="menu" id="mb" aria-label="Menu" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg></button><svg class="logo3" viewBox="0 0 64 44" width="60" height="42" aria-hidden="true"><g transform="rotate(-11 19 34)"><rect x="4" y="12" width="30" height="24" rx="5" fill="#fff" stroke="#cfd6cf"/><path d="M4 20h30" stroke="#dfe4df"/><rect x="16" y="17" width="6" height="4" rx="1.5" fill="#cfd6cf"/></g><g transform="rotate(11 45 34)"><rect x="30" y="12" width="30" height="24" rx="5" fill="#fff" stroke="#cfd6cf"/><path d="M30 20h30" stroke="#dfe4df"/><rect x="42" y="17" width="6" height="4" rx="1.5" fill="#cfd6cf"/></g><g><rect x="17" y="8" width="30" height="27" rx="5" fill="#fff" stroke="#cfd6cf"/><path d="M17 17h30" stroke="#dfe4df"/><rect x="29" y="12" width="6" height="4" rx="1.5" fill="#cfd6cf"/><circle cx="25" cy="26" r="1.2" fill="#e3e8e3"/><circle cx="34" cy="29" r="1.2" fill="#e3e8e3"/><circle cx="41" cy="24" r="1.2" fill="#e3e8e3"/></g></svg>Marmitas da Tiane</div>
+  <nav class="drop" id="dp" hidden><button data-n="1">Lançar marmitas</button><button data-n="2">Totais</button><button data-n="3">Clientes e resumo</button></nav>
+  <div class="hero-row">
+    <div>
+      <p class="hi" id="hi"></p><h1>Cada marmita conta.</h1>
+      <div class="today"><div><span class="big" id="hq">0</span><small>marmitas hoje</small></div><div><span class="big" id="hv">R$ 0</span><small>faturado na semana</small></div></div><div class="goal"><div class="gb"><i id="gi"></i></div><small id="gt"></small></div>
+    </div>
+    <svg class="lunch" viewBox="0 0 160 130" aria-hidden="true"><g class="steam"><path d="M68 40c-8-8 8-14 0-24"/><path d="M84 40c-8-8 8-14 0-24"/><path d="M100 40c-8-8 8-14 0-24"/></g><g transform="rotate(-10 35 100)"><rect x="4" y="62" width="62" height="50" rx="10" fill="#fff" stroke="#c9d3e3" stroke-width="2"/><path d="M4 79h62" stroke="#dde4f0" stroke-width="2"/><rect x="27" y="71" width="16" height="7" rx="3" fill="#c9d3e3"/></g><g transform="rotate(10 125 100)"><rect x="94" y="62" width="62" height="50" rx="10" fill="#fff" stroke="#c9d3e3" stroke-width="2"/><path d="M94 79h62" stroke="#dde4f0" stroke-width="2"/><rect x="117" y="71" width="16" height="7" rx="3" fill="#c9d3e3"/></g><g><rect x="49" y="46" width="62" height="64" rx="10" fill="#fff" stroke="#c9d3e3" stroke-width="2"/><path d="M49 65h62" stroke="#dde4f0" stroke-width="2"/><rect x="72" y="54" width="16" height="7" rx="3" fill="#c9d3e3"/><circle cx="62" cy="84" r="2" fill="#e3e8ef"/><circle cx="82" cy="92" r="2" fill="#e3e8ef"/><circle cx="98" cy="80" r="2" fill="#e3e8ef"/><circle cx="72" cy="100" r="2" fill="#e3e8ef"/></g></svg>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <div class="tabs" role="tablist" data-i="1">
+    <button role="tab" id="t1" aria-selected="true">Lançar marmitas</button>
+    <button role="tab" id="t2" aria-selected="false">Totais</button>
+  </div>
+
+  <section id="p1">
+    <div class="card">
+      <h2>Novo lançamento</h2>
+      <form id="f"><div class="full"><label>Cliente<input id="c" list="cl" placeholder="Ex.: Empresa A" autocomplete="off" required></label><datalist id="cl"></datalist><div class="chips" id="chips"></div></div>
+        <label>Quantidade<input id="q" type="number" min="1" step="1" inputmode="numeric" placeholder="50" required></label>
+        <label>Valor de cada (R$)<input id="v" type="number" min="0.01" step="0.01" inputmode="decimal" required></label>
+        <label class="full">Data<input id="d" type="date" required></label>
+        <label class="full">Observação (opcional)<input id="o" type="text" maxlength="80" placeholder="Ex.: sem feijão, entrega às 11h"></label>
+        <button class="go full" type="submit">Lançar marmitas</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Lançado nesta semana</h2>
+      <div id="list"></div>
+    </div>
+  </section>
+
+  <div id="ctl" hidden>
+    <div class="seg" id="seg">
+      <button data-p="w" aria-pressed="true">Semana</button>
+      <button data-p="m" aria-pressed="false">Mês</button>
+      <button data-p="a" aria-pressed="false">Tudo</button>
+    </div>
+
+    <div class="mp" id="mp" hidden><select id="sm" aria-label="Mês"></select><select id="sy" aria-label="Ano"></select></div>
+</div>
+  <section id="p2" hidden>
+    <div class="kpis">
+      <div class="kpi"><span class="big" id="kq">0</span><br><small>marmitas vendidas</small></div>
+      <div class="kpi"><span class="big" id="kv">R$ 0</span><br><small>faturamento</small></div>
+    <div class="kpi avg"><span class="big" id="ka">0</span><br><small>média por dia com vendas</small></div>
+      <div class="kpi"><span class="big" id="kr">R$ 0</span><br><small>a receber</small></div>
+    </div>
+    <div class="card"><h2 id="ct">Por dia</h2><div class="chart" id="chart"></div></div>
+  </section>
+<section id="p3" hidden>
+    <div class="card"><h2>Por cliente</h2><p class="empty" style="margin:0 0 6px">Marque os clientes que entram no resumo.</p><div class="chips" style="margin:0 0 6px"><button type="button" id="sa">Marcar todos</button><button type="button" id="sn">Desmarcar todos</button></div><div id="byc"></div><button class="go" id="cp" style="width:100%;margin-top:12px">Copiar resumo para o WhatsApp</button>
+    <button class="go" id="csv" style="width:100%;margin-top:10px;background:var(--chili)">Baixar planilha (Excel)</button></div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
