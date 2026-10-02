@@ -13,7 +13,7 @@ function render(){
   const hr=new Date().getHours(),META=50;$('#hi').textContent=hr<12?'Bom dia!':hr<18?'Boa tarde!':'Boa noite!';
   $('#gi').style.width=Math.min(100,h.q/META*100)+'%';$('#gt').textContent=h.q>=META?'Meta do dia batida! 🎉':'Faltam '+(META-h.q)+' para a meta de '+META;
   const wl=S.e.filter(e=>e.d>=ws&&e.d<=we).sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);
-  $('#list').innerHTML=wl.length?wl.map(e=>`<div class="row"><div><b>${e.q} marmitas · ${esc(e.c||'Sem cliente')}</b><br><span>${e.d.split('-').reverse().slice(0,2).join('/')} · ${brl(e.v||0)} cada${e.o?' · '+esc(e.o):''}</span></div><div style="text-align:right"><b>${brl(e.q*(e.v||0))}</b><br><button class="pay ${e.p?'ok':''}" data-id="${e.id}">${e.p?'Pago ✓':'A receber'}</button><button class="del" data-id="${e.id}" aria-label="Apagar lançamento">Apagar</button></div></div>`).join(''):'<p class="empty">Nada lançado esta semana. Preencha acima e toque em Lançar marmitas.</p>';
+  $('#list').innerHTML=wl.length?wl.map(e=>`<div class="row"><div><b>${e.q} marmitas · ${esc(e.c||'Sem cliente')}</b><br><span>${e.d.split('-').reverse().slice(0,2).join('/')} · ${brl(e.v||0)} cada${e.o?' · '+esc(e.o):''}</span></div><div style="text-align:right"><b>${brl(e.q*(e.v||0))}</b><br>${e.p?`<span style="color:#2E9E5B;font-weight:700;font-size:13px">Recebido${e.pd?' '+e.pd.split('-').reverse().slice(0,2).join('/'):''} ✓</span> <button class="pay" data-id="${e.id}">Desfazer</button>`:`<span style="color:var(--chili);font-weight:700;font-size:13px">A receber</span> <button class="pay" data-id="${e.id}" style="background:#2E9E5B;border-color:#2E9E5B;color:#fff">Recebi</button>`}<button class="del" data-id="${e.id}" aria-label="Apagar lançamento">Apagar</button></div></div>`).join(''):'<p class="empty">Nada lançado esta semana. Preencha acima e toque em Lançar marmitas.</p>';
   const ym=SY+'-'+pad(SM);
   let set,keys,labels;
   if(per==='w'){set=wl;const s=parse(ws);keys=[...Array(7)].map((_,i)=>iso(new Date(s.getFullYear(),s.getMonth(),s.getDate()+i)));labels=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']}
@@ -67,7 +67,7 @@ const csvDl=()=>{const L=(window._set||[]).slice().sort((a,b)=>a.d.localeCompare
   if(!L.length){toast('Nada para baixar neste período');return}
   const f=n=>String(n).replace('.',','),q=x=>'"'+String(x).replace(/"/g,'""')+'"';
   let c='Data;Cliente;Quantidade;Valor de cada;Total;Situação\r\n';
-  L.forEach(e=>{const v=e.v||0;c+=[e.d.split('-').reverse().join('/'),q(e.c||'Sem cliente'),e.q,f(v.toFixed(2)),f((e.q*v).toFixed(2)),e.p?'Pago':'A receber'].join(';')+'\r\n'});
+  L.forEach(e=>{const v=e.v||0;c+=[e.d.split('-').reverse().join('/'),q(e.c||'Sem cliente'),e.q,f(v.toFixed(2)),f((e.q*v).toFixed(2)),e.p?'Recebido':'A receber'].join(';')+'\r\n'});
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv;charset=utf-8'}));
   a.download='marmitas-'+(per==='m'?SY+'-'+pad(SM):per==='w'?'semana':'tudo')+'.csv';document.body.appendChild(a);a.click();a.remove();toast('Planilha baixada ✓')};
 $('#csv').onclick=async()=>{
@@ -79,19 +79,19 @@ $('#csv').onclick=async()=>{
     const hd=r=>{r.height=26;r.eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'},size:12};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0B2545'}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true}})};
     const DS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
     const U=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d))};
-    const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Lançamentos',{views:[{state:'frozen',ySplit:1}]});
-    ws.columns=[{header:'Data',width:13},{header:'Dia da semana',width:16},{header:'Mês',width:17},{header:'Cliente',width:26},{header:'Quantidade',width:14},{header:'Valor de cada',width:16},{header:'Total',width:16},{header:'Situação',width:14},{header:'Data do pagamento',width:19},{header:'Observação',width:32}];
+    const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Lançamentos',{views:[{state:'frozen',ySplit:1,zoomScale:70}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0}});
+    ws.columns=[{header:'Data',width:13},{header:'Dia da semana',width:16},{header:'Mês',width:17},{header:'Cliente',width:26},{header:'Quantidade',width:14},{header:'Valor de cada',width:16},{header:'Total',width:16},{header:'Situação',width:14},{header:'Data do recebimento',width:20},{header:'Observação',width:32}];
     let TQ=0,TV=0;const n=L.length;
     L.forEach((e,i)=>{const r=i+2,v=e.v||0,dt=U(e.d);TQ+=e.q;TV+=e.q*v;
-      ws.addRow([dt,DS[dt.getUTCDay()],MN[dt.getUTCMonth()]+'/'+dt.getUTCFullYear(),e.c||'Sem cliente',e.q,v,{formula:'E'+r+'*F'+r,result:e.q*v},e.p?'Pago':'A receber',e.p&&e.pd?U(e.pd):'',e.o||'']);});
+      ws.addRow([dt,DS[dt.getUTCDay()],MN[dt.getUTCMonth()]+'/'+dt.getUTCFullYear(),e.c||'Sem cliente',e.q,v,{formula:'E'+r+'*F'+r,result:e.q*v},e.p?'Recebido':'A receber',e.p&&e.pd?U(e.pd):'',e.o||'']);});
     hd(ws.getRow(1));
     ws.eachRow((r,i)=>{if(i<2)return;r.height=22;r.eachCell({includeEmpty:true},(c,col)=>{c.border=bd;c.alignment={vertical:'middle',horizontal:col===4||col===10?'left':col===6||col===7?'right':'center'};
       if(col===1||col===9)c.numFmt='dd/mm/yyyy';if(col===6||col===7)c.numFmt=money;
-      if(col===8){const pg=c.value==='Pago';c.font={bold:true,color:{argb:pg?'FF1B6E3F':'FFB4440A'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:pg?'FFD9F2E3':'FFFFE6D6'}}}})});
+      if(col===8){const pg=c.value==='Recebido';c.font={bold:true,color:{argb:pg?'FF1B6E3F':'FFB4440A'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:pg?'FFD9F2E3':'FFFFE6D6'}}}})});
     const tr=ws.addRow(['Total','','','(respeita o filtro)',{formula:'SUBTOTAL(109,E2:E'+(n+1)+')',result:TQ},'',{formula:'SUBTOTAL(109,G2:G'+(n+1)+')',result:TV},'','','']);tr.height=24;
     tr.eachCell({includeEmpty:true},(c,col)=>{c.font={bold:true};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8EEF8'}};c.border={top:{style:'medium',color:{argb:'FF0B2545'}}};c.alignment={vertical:'middle',horizontal:col===4?'left':col===7?'right':'center'};if(col===7)c.numFmt=money});
     ws.autoFilter={from:'A1',to:'J'+(n+1)};
-    const w2=wb.addWorksheet('Por cliente');
+    const w2=wb.addWorksheet('Por cliente',{views:[{zoomScale:70}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0}});
     w2.columns=[{header:'Cliente',width:28},{header:'Marmitas',width:14},{header:'Total',width:17},{header:'Recebido',width:17},{header:'A receber',width:17}];
     const bc={};L.forEach(e=>{const k=e.c||'Sem cliente',t=e.q*(e.v||0);bc[k]=bc[k]||{q:0,t:0,r:0};bc[k].q+=e.q;bc[k].t+=t;if(e.p)bc[k].r+=t});
     Object.entries(bc).sort((a,b)=>b[1].t-a[1].t).forEach(([k,x])=>w2.addRow([k,x.q,x.t,x.r,x.t-x.r]));
@@ -104,4 +104,3 @@ $('#csv').onclick=async()=>{
 };
 $('#d').value=iso(new Date());
 render();
-    
